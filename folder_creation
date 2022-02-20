@@ -1,0 +1,143 @@
+import pandas as pd
+import os
+import glob
+import shutil
+
+def listToString(s): 
+    str1 = "" 
+    for ele in s: 
+        str1 += ele  
+    return str1 
+
+folder_date = pd.Timestamp("today").strftime("%Y-%m-%d")
+web = r'C:\Users\spi\Downloads\conversion\test\website'
+pro = r'C:\Users\spi\Downloads\conversion\test\provider'
+create = r'C:\Users\spi\Xperi\Premkumar Jaganathan - pandora_data'
+main = r'C:\Users\spi\Downloads\conversion\test'
+mediapress = r'C:\Users\spi\Downloads\conversion\test\mediapress'
+reporttv = r'C:\Users\spi\Downloads\conversion\test\Report_TV'
+cosmo = r'C:\Users\spi\Downloads\conversion\test\cosmo'
+file1='folder_list.xlsx'
+foldernames = pd.read_excel(os.path.join(main,file1))
+foldernames['create'] = foldernames['source_name']+"_"+foldernames['source id'].astype(str)
+dict = foldernames.groupby('source_name')['create'].apply(list).to_dict()
+regt = foldernames.groupby('source_name')['team'].apply(list).to_dict()
+
+webfile = os.listdir(web)
+credr = os.listdir(create)
+prodfile = os.listdir(pro)
+mdprsfile = os.listdir(mediapress)
+cosmofile = os.listdir(cosmo)
+
+for filename in webfile:
+    folder = filename.replace('-Website.xml','').lower()
+    
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder))))
+    except OSError:
+        pass
+    old = os.path.join(web,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),filename)
+    shutil.move(old,new)
+print('process completed')
+
+
+#Cosmo input report
+
+for filename in cosmofile:
+    folder = filename.replace('-Cosmo Input Report.xlsx','').lower()
+    old = os.path.join(cosmo,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),filename)
+    if os.path.exists(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)))):
+        shutil.move(old,new)
+    else:
+        pass
+print('process completed')
+
+
+# provider file
+
+for filename in prodfile:
+    folder = filename.replace('-Provider.xml','').lower()
+
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder))))
+    except OSError:
+        pass
+    old = os.path.join(pro,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),filename)
+    shutil.move(old,new)
+    
+print('process completed')
+
+
+# mediapress file
+
+for filename in mdprsfile:
+    folder = filename.replace('.xml','').lower()
+    
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_mediapress'))
+    except OSError:
+        pass
+    old = os.path.join(mediapress,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_mediapress',filename)
+    shutil.move(old,new)
+print('process completed')
+
+#for website rename
+
+import pandas as pd
+import os
+import glob
+import shutil
+
+path = r'C:\Users\spi\Downloads\conversion\test\website'
+
+rename = os.listdir(path)
+for index, file in enumerate(rename):
+    #print (file)
+    os.rename(os.path.join(path,file), os.path.join(path,file.replace('.xml','')) +'-Website' +'.xml')
+    
+    # report file
+
+for filename in mdprsfile:
+    folder = filename.replace('.xml','').lower()
+    
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_reporttv'))
+    except OSError:
+        pass
+    old = os.path.join(mediapress,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_reporttv',filename)
+    shutil.move(old,new)
+print('process completed')
+
+# competitor file
+
+for filename in mdprsfile:
+    folder = filename.replace('-Website.xml','').lower()
+    
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'competitor_website'))
+    except OSError:
+        pass
+    old = os.path.join(mediapress,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'competitor_website',filename)
+    shutil.move(old,new)
+print('process completed')
+
+# mediapress file
+
+for filename in mdprsfile:
+    folder = filename.replace('.xml','').lower()
+    
+    try:
+        os.makedirs(os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_gvidi'))
+    except OSError:
+        pass
+    old = os.path.join(mediapress,filename)
+    new = os.path.join(create,listToString(regt.get(folder)),folder_date,listToString(dict.get(folder)),'provider_gvidi',filename)
+    shutil.move(old,new)
+print('process completed')
+
